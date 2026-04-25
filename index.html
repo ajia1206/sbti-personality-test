@@ -430,38 +430,88 @@
     }
 
     .option {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      grid-template-columns: auto auto 1fr;
+      align-items: center;
       gap: 12px;
-      padding: 14px 14px;
+      padding: 16px 14px;
       border-radius: 14px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.04);
-      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+      cursor: pointer;
+      min-height: 64px;
+      position: relative;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease, box-shadow .16s ease;
+      user-select: none;
     }
 
     .option:hover {
       border-color: var(--accent);
       background: rgba(0,255,209,0.08);
+      transform: translateY(-1px);
     }
 
-    .option:has(input:checked) {
+    .option:focus-within {
+      outline: 3px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    .option:has(input:checked),
+    .option.is-selected {
       border-color: var(--accent-strong);
       background: rgba(255,61,242,0.12);
       box-shadow: inset 3px 0 0 var(--accent-strong);
     }
 
     .option input {
-      margin-top: 3px;
-      accent-color: var(--accent-strong);
-      transform: scale(1.1);
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option-marker {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 2px solid var(--line);
+      color: transparent;
+      font-size: 13px;
+      font-weight: 900;
       flex-shrink: 0;
+      transition: background .16s ease, border-color .16s ease, color .16s ease, transform .16s ease;
+    }
+
+    .option:has(input:checked) .option-marker,
+    .option.is-selected .option-marker {
+      background: var(--accent-strong);
+      border-color: var(--accent-strong);
+      color: #ffffff;
+      transform: scale(1.04);
     }
 
     .option-code {
       font-weight: 800;
       color: var(--accent);
       min-width: 22px;
+    }
+
+    .option:has(input:checked) .option-code,
+    .option.is-selected .option-code {
+      color: inherit;
+    }
+
+    .option-text {
+      line-height: 1.65;
+    }
+
+    .selection-state {
+      margin-top: 14px;
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
     }
 
     .actions-bottom {
@@ -992,10 +1042,22 @@
     }
 
     html[data-ui="mono"] .option:has(input:checked),
+    html[data-ui="mono"] .option.is-selected,
     html[data-ui="mono"] .btn-secondary:hover,
     html[data-ui="mono"] .btn-primary:hover {
       background: #000000;
       color: #ffffff;
+    }
+
+    html[data-ui="mono"] .option-marker {
+      border-color: #000000;
+    }
+
+    html[data-ui="mono"] .option:has(input:checked) .option-marker,
+    html[data-ui="mono"] .option.is-selected .option-marker {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
     }
 
     html[data-ui="mono"] .badge,
@@ -1106,11 +1168,23 @@
     }
 
     html[data-ui="swiss"] .option:has(input:checked),
+    html[data-ui="swiss"] .option.is-selected,
     html[data-ui="swiss"] .btn-secondary:hover,
     html[data-ui="swiss"] .btn-primary:hover {
       background: #000000;
       color: #ffffff;
       transform: translateY(-1px);
+    }
+
+    html[data-ui="swiss"] .option-marker {
+      border-color: #000000;
+    }
+
+    html[data-ui="swiss"] .option:has(input:checked) .option-marker,
+    html[data-ui="swiss"] .option.is-selected .option-marker {
+      background: #ff3000;
+      color: #ffffff;
+      border-color: #ff3000;
     }
 
     html[data-ui="swiss"] .badge,
@@ -1209,11 +1283,19 @@
       color: #1e293b;
     }
 
-    html[data-ui="playful"] .option:has(input:checked) {
+    html[data-ui="playful"] .option:has(input:checked),
+    html[data-ui="playful"] .option.is-selected {
       background: #f472b6;
       color: #ffffff;
       border-color: #1e293b;
       box-shadow: 4px 4px 0 #1e293b;
+    }
+
+    html[data-ui="playful"] .option:has(input:checked) .option-marker,
+    html[data-ui="playful"] .option.is-selected .option-marker {
+      background: #34d399;
+      color: #1e293b;
+      border-color: #1e293b;
     }
 
     html[data-ui="playful"] .badge,
@@ -1323,7 +1405,7 @@
         <div id="questionList" class="question-list"></div>
 
         <div class="actions-bottom">
-          <div class="hint" id="testHint">全选完才会放行。世界已经够乱了，起码把题做完整。</div>
+          <div class="hint" id="testHint" aria-live="polite">全选完才会放行。世界已经够乱了，起码把题做完整。</div>
           <div class="nav-cluster">
             <button id="backIntroBtn" class="btn-secondary">返回首页</button>
             <button id="prevQuestionBtn" class="btn-secondary">上一题</button>
@@ -2154,15 +2236,19 @@
           ${q.options.map((opt, i) => {
             const code = ['A', 'B', 'C', 'D'][i] || String(i + 1);
             const checked = app.answers[q.id] === opt.value ? 'checked' : '';
+            const selected = checked ? 'is-selected' : '';
+            const inputId = `answer-${q.id}-${i}`;
             return `
-              <label class="option">
-                <input type="radio" name="${q.id}" value="${opt.value}" ${checked} />
+              <label class="option ${selected}" for="${inputId}" data-option-code="${code}">
+                <input id="${inputId}" type="radio" name="${q.id}" value="${opt.value}" ${checked} />
+                <span class="option-marker" aria-hidden="true">✓</span>
                 <div class="option-code">${code}</div>
-                <div>${opt.label}</div>
+                <div class="option-text">${opt.label}</div>
               </label>
             `;
           }).join('')}
         </div>
+        <div class="selection-state" aria-live="polite"></div>
       `;
       questionList.appendChild(card);
 
@@ -2170,6 +2256,7 @@
         input.addEventListener('change', (e) => {
           const { name, value } = e.target;
           app.answers[name] = Number(value);
+          syncOptionState(card, q);
 
           if (name === 'drink_gate_q1') {
             if (Number(value) !== 3) {
@@ -2183,7 +2270,27 @@
         });
       });
 
+      syncOptionState(card, q);
       updateProgress();
+    }
+
+    function syncOptionState(card, q) {
+      const selectedValue = app.answers[q.id];
+      const selectedOption = q.options.find((opt) => opt.value === selectedValue);
+      card.querySelectorAll('.option').forEach((label) => {
+        const input = label.querySelector('input');
+        const isSelected = Number(input.value) === selectedValue;
+        label.classList.toggle('is-selected', isSelected);
+      });
+      const state = card.querySelector('.selection-state');
+      if (state) {
+        const selectedCode = selectedOption
+          ? ['A', 'B', 'C', 'D'][q.options.indexOf(selectedOption)] || String(q.options.indexOf(selectedOption) + 1)
+          : '';
+        state.textContent = selectedOption
+          ? `已选择 ${selectedCode}。可以继续下一题，也可以重新点选修改。`
+          : '选择一个最接近你的答案。键盘可按 A / B / C / D 快速选择。';
+      }
     }
 
     function updateProgress() {
@@ -2205,8 +2312,8 @@
       testHint.textContent = complete
         ? '都做完了。现在可以把你的电子魂魄交给结果页审判。'
         : currentAnswered
-          ? '当前题已锁定。继续翻下一张卡片。'
-          : '先选一个答案，下一张卡片才会解锁。';
+          ? '当前题已选择。点下一题，或按 Enter 继续。'
+          : '点整张选项卡即可选择；键盘可按 A / B / C / D。';
     }
 
     function sumToLevel(score) {
@@ -2373,6 +2480,49 @@
       renderQuestions();
     }
 
+    function chooseCurrentOption(optionIndex) {
+      const visibleQuestions = getVisibleQuestions();
+      const q = visibleQuestions[app.currentIndex];
+      if (!q || !q.options[optionIndex]) return;
+      const input = questionList.querySelectorAll('input[type="radio"]')[optionIndex];
+      if (!input) return;
+      input.checked = true;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    function handleTestShortcuts(event) {
+      if (!screens.test.classList.contains('active')) return;
+      const activeTag = document.activeElement?.tagName;
+      if (['BUTTON', 'A', 'SUMMARY'].includes(activeTag)) return;
+
+      const key = event.key.toLowerCase();
+      const optionIndex = ['a', 'b', 'c', 'd'].indexOf(key);
+      if (optionIndex !== -1) {
+        event.preventDefault();
+        chooseCurrentOption(optionIndex);
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        if (!nextQuestionBtn.disabled && nextQuestionBtn.style.display !== 'none') {
+          moveQuestion(1);
+        } else if (!submitBtn.disabled && submitBtn.style.display !== 'none') {
+          renderResult();
+        }
+        return;
+      }
+
+      if (event.key === 'ArrowRight' && !nextQuestionBtn.disabled && nextQuestionBtn.style.display !== 'none') {
+        event.preventDefault();
+        moveQuestion(1);
+      }
+      if (event.key === 'ArrowLeft' && !prevQuestionBtn.disabled) {
+        event.preventDefault();
+        moveQuestion(-1);
+      }
+    }
+
     function setUiMode(mode) {
       const allowed = new Set(['cyber', 'mono', 'swiss', 'playful']);
       const nextMode = allowed.has(mode) ? mode : 'cyber';
@@ -2396,6 +2546,7 @@
     document.getElementById('submitBtn').addEventListener('click', renderResult);
     document.getElementById('restartBtn').addEventListener('click', () => startTest(false));
     document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
+    document.addEventListener('keydown', handleTestShortcuts);
   </script>
 
 </body>

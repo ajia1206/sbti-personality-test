@@ -19,6 +19,7 @@ GitHub 仓库：
 - 深色赛博朋克视觉风格。
 - 内置 UI 风格切换：Cyberpunk、Minimalist Monochrome、Swiss International、Playful Geometric。
 - 单题卡片堆叠式答题流程。
+- 支持整卡点选、A/B/C/D 快捷选择和 Enter 快速进入下一题。
 - 结果页展示人格配图、匹配度和维度解释。
 
 ## 本地运行
