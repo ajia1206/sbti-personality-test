@@ -17,6 +17,7 @@ GitHub 仓库：
 - 15 个维度评分，按 L / M / H 分级。
 - 25 种常规人格 + HHHH 兜底人格 + DRUNK 隐藏人格。
 - 深色赛博朋克视觉风格。
+- 内置 UI 风格切换：Cyberpunk、Minimalist Monochrome、Swiss International、Playful Geometric。
 - 单题卡片堆叠式答题流程。
 - 结果页展示人格配图、匹配度和维度解释。
 
@@ -79,6 +80,15 @@ https://sbti-personality-test-sepia.vercel.app
 ```
 
 如果重新部署，只需要发布 `index.html` 和 `images/` 目录即可。
+
+## UI 模式
+
+页面顶部提供 4 种 UI 模式切换，选择会写入浏览器 `localStorage`：
+
+- `Cyber`: 默认深色赛博朋克风格。
+- `Mono`: 高对比黑白、 serif 标题、锐利边框的编辑风格。
+- `Swiss`: 国际主义网格、粗边框、Swiss Red 功能强调。
+- `Play`: Playful Geometric，使用高饱和色块、硬阴影和圆形控件。
 
 ## 说明
 

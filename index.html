@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBTI 人格测试</title>
   <link rel="icon" href="data:," />
+  <script>
+    try {
+      document.documentElement.dataset.ui = localStorage.getItem('sbti-ui') || 'cyber';
+    } catch {
+      document.documentElement.dataset.ui = 'cyber';
+    }
+  </script>
   <style>
     :root {
       --bg: #080a12;
@@ -23,6 +30,7 @@
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background:
@@ -36,10 +44,113 @@
       min-height: 100vh;
     }
 
+    .skip-link {
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      z-index: 20;
+      transform: translateY(-160%);
+      background: var(--accent);
+      color: #00110e;
+      padding: 10px 14px;
+      border: 2px solid var(--accent);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .skip-link:focus-visible {
+      transform: translateY(0);
+      outline: 3px solid var(--text);
+      outline-offset: 3px;
+    }
+
     .shell {
       max-width: 980px;
       margin: 0 auto;
       padding: 24px 16px 56px;
+    }
+
+    .ui-switch {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0;
+      margin: 14px 0 18px;
+    }
+
+    .ui-switch button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .ui-switch button + button {
+      border-left: 0;
+    }
+
+    .ui-switch button[aria-pressed="true"] {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .ui-switch button:focus-visible,
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    html[data-ui="mono"] {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --panel-strong: #000000;
+      --text: #000000;
+      --muted: #525252;
+      --line: #000000;
+      --soft: #f5f5f5;
+      --accent: #000000;
+      --accent-strong: #000000;
+      --accent-warm: #000000;
+      --shadow: none;
+      --radius: 0;
+    }
+
+    html[data-ui="swiss"] {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --panel-strong: #000000;
+      --text: #000000;
+      --muted: #525252;
+      --line: #000000;
+      --soft: #f2f2f2;
+      --accent: #ff3000;
+      --accent-strong: #ff3000;
+      --accent-warm: #ff3000;
+      --shadow: none;
+      --radius: 0;
+    }
+
+    html[data-ui="playful"] {
+      --bg: #fffdf5;
+      --panel: #ffffff;
+      --panel-strong: #1e293b;
+      --text: #1e293b;
+      --muted: #64748b;
+      --line: #1e293b;
+      --soft: #f1f5f9;
+      --accent: #8b5cf6;
+      --accent-strong: #f472b6;
+      --accent-warm: #fbbf24;
+      --accent-fresh: #34d399;
+      --shadow: 6px 6px 0 #1e293b;
+      --radius: 24px;
     }
 
     .card {
@@ -779,6 +890,309 @@
       justify-content: flex-end;
     }
 
+    html[data-ui="mono"] body {
+      font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.015) 1px, rgba(0,0,0,0.015) 2px),
+        #ffffff;
+      color: #000000;
+    }
+
+    html[data-ui="mono"] .shell,
+    html[data-ui="swiss"] .shell {
+      max-width: 1152px;
+    }
+
+    html[data-ui="mono"] .card,
+    html[data-ui="mono"] .hero,
+    html[data-ui="mono"] .test-wrap,
+    html[data-ui="mono"] .result-wrap,
+    html[data-ui="mono"] .question,
+    html[data-ui="mono"] .option,
+    html[data-ui="mono"] .poster-box,
+    html[data-ui="mono"] .type-box,
+    html[data-ui="mono"] .analysis-box,
+    html[data-ui="mono"] .dim-box,
+    html[data-ui="mono"] .note-box,
+    html[data-ui="mono"] .author-box,
+    html[data-ui="mono"] .dim-item,
+    html[data-ui="mono"] .ui-switch button {
+      border-radius: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      background: #ffffff;
+      border-color: #000000;
+      color: #000000;
+    }
+
+    html[data-ui="mono"] .hero,
+    html[data-ui="mono"] .test-wrap,
+    html[data-ui="mono"] .result-wrap {
+      border-width: 4px;
+    }
+
+    html[data-ui="mono"] .hero::after,
+    html[data-ui="mono"] .poster-box::after,
+    html[data-ui="mono"] .question::before,
+    html[data-ui="mono"] .question::after {
+      display: none;
+    }
+
+    html[data-ui="mono"] .hero-minimal {
+      align-items: flex-start;
+      text-align: left;
+      min-height: 64vh;
+    }
+
+    html[data-ui="mono"] .hero-minimal h1 {
+      max-width: 900px;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 96px;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-shadow: none;
+      text-transform: none;
+    }
+
+    html[data-ui="mono"] .btn-primary,
+    html[data-ui="mono"] .ui-switch button[aria-pressed="true"] {
+      background: #000000;
+      color: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 0;
+      box-shadow: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    html[data-ui="mono"] .btn-secondary,
+    html[data-ui="mono"] .option {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    html[data-ui="mono"] .option:has(input:checked),
+    html[data-ui="mono"] .btn-secondary:hover,
+    html[data-ui="mono"] .btn-primary:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    html[data-ui="mono"] .badge,
+    html[data-ui="mono"] .match {
+      border-radius: 0;
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+    }
+
+    html[data-ui="swiss"] body {
+      font-family: Inter, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+        #ffffff;
+      background-size: 24px 24px;
+      color: #000000;
+    }
+
+    html[data-ui="swiss"] .card,
+    html[data-ui="swiss"] .hero,
+    html[data-ui="swiss"] .test-wrap,
+    html[data-ui="swiss"] .result-wrap,
+    html[data-ui="swiss"] .question,
+    html[data-ui="swiss"] .option,
+    html[data-ui="swiss"] .poster-box,
+    html[data-ui="swiss"] .type-box,
+    html[data-ui="swiss"] .analysis-box,
+    html[data-ui="swiss"] .dim-box,
+    html[data-ui="swiss"] .note-box,
+    html[data-ui="swiss"] .author-box,
+    html[data-ui="swiss"] .dim-item,
+    html[data-ui="swiss"] .ui-switch button {
+      border-radius: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      background: #ffffff;
+      border-color: #000000;
+      color: #000000;
+    }
+
+    html[data-ui="swiss"] .hero,
+    html[data-ui="swiss"] .test-wrap,
+    html[data-ui="swiss"] .result-wrap {
+      border-width: 4px;
+      background:
+        radial-gradient(circle, rgba(255,48,0,0.06) 1px, transparent 1px),
+        #ffffff;
+      background-size: 16px 16px;
+    }
+
+    html[data-ui="swiss"] .hero-minimal {
+      align-items: flex-start;
+      text-align: left;
+      min-height: 60vh;
+      justify-content: space-between;
+    }
+
+    html[data-ui="swiss"] .hero-minimal h1,
+    html[data-ui="swiss"] .type-name {
+      max-width: 920px;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      font-size: 104px;
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.06em;
+      text-transform: uppercase;
+      text-shadow: none;
+    }
+
+    html[data-ui="swiss"] .btn-primary,
+    html[data-ui="swiss"] .ui-switch button[aria-pressed="true"] {
+      background: #ff3000;
+      color: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 0;
+      box-shadow: none;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    html[data-ui="swiss"] .btn-secondary,
+    html[data-ui="swiss"] .option {
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid #000000;
+      border-radius: 0;
+      box-shadow: none;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    html[data-ui="swiss"] .option:has(input:checked),
+    html[data-ui="swiss"] .btn-secondary:hover,
+    html[data-ui="swiss"] .btn-primary:hover {
+      background: #000000;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    html[data-ui="swiss"] .badge,
+    html[data-ui="swiss"] .match,
+    html[data-ui="swiss"] .option-code,
+    html[data-ui="swiss"] .type-kicker,
+    html[data-ui="swiss"] .dim-item-score {
+      color: #ff3000;
+    }
+
+    html[data-ui="playful"] body {
+      font-family: "Plus Jakarta Sans", "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12px 12px, rgba(139,92,246,0.16) 2px, transparent 3px),
+        radial-gradient(circle at 85% 10%, rgba(251,191,36,0.35), transparent 20%),
+        radial-gradient(circle at 12% 88%, rgba(244,114,182,0.22), transparent 24%),
+        #fffdf5;
+      background-size: 28px 28px, auto, auto, auto;
+      color: #1e293b;
+    }
+
+    html[data-ui="playful"] .card,
+    html[data-ui="playful"] .hero,
+    html[data-ui="playful"] .test-wrap,
+    html[data-ui="playful"] .result-wrap,
+    html[data-ui="playful"] .question,
+    html[data-ui="playful"] .option,
+    html[data-ui="playful"] .poster-box,
+    html[data-ui="playful"] .type-box,
+    html[data-ui="playful"] .analysis-box,
+    html[data-ui="playful"] .dim-box,
+    html[data-ui="playful"] .note-box,
+    html[data-ui="playful"] .author-box,
+    html[data-ui="playful"] .dim-item {
+      border: 2px solid #1e293b;
+      border-radius: 24px;
+      background: #ffffff;
+      box-shadow: 6px 6px 0 #1e293b;
+      color: #1e293b;
+      backdrop-filter: none;
+    }
+
+    html[data-ui="playful"] .hero {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(251,191,36,0.7) 0 16%, transparent 17%),
+        radial-gradient(circle at 86% 20%, rgba(52,211,153,0.36) 0 12%, transparent 13%),
+        linear-gradient(135deg, #ffffff, #fff7d6);
+    }
+
+    html[data-ui="playful"] .hero-minimal h1 {
+      font-family: Outfit, "Plus Jakarta Sans", system-ui, sans-serif;
+      color: #1e293b;
+      text-shadow: none;
+      font-weight: 800;
+    }
+
+    html[data-ui="playful"] .btn-primary,
+    html[data-ui="playful"] .ui-switch button[aria-pressed="true"] {
+      background: #8b5cf6;
+      color: #ffffff;
+      border: 2px solid #1e293b;
+      border-radius: 999px;
+      box-shadow: 4px 4px 0 #1e293b;
+      font-weight: 800;
+    }
+
+    html[data-ui="playful"] .btn-secondary,
+    html[data-ui="playful"] .ui-switch button {
+      background: #ffffff;
+      color: #1e293b;
+      border: 2px solid #1e293b;
+      border-radius: 999px;
+      box-shadow: none;
+    }
+
+    html[data-ui="playful"] .btn-primary:hover,
+    html[data-ui="playful"] .btn-secondary:hover,
+    html[data-ui="playful"] .option:hover {
+      transform: translate(-2px, -2px) rotate(-1deg);
+      box-shadow: 8px 8px 0 #1e293b;
+      background: #fbbf24;
+      color: #1e293b;
+    }
+
+    html[data-ui="playful"] .option:has(input:checked) {
+      background: #f472b6;
+      color: #ffffff;
+      border-color: #1e293b;
+      box-shadow: 4px 4px 0 #1e293b;
+    }
+
+    html[data-ui="playful"] .badge,
+    html[data-ui="playful"] .match {
+      border-radius: 999px;
+      background: #34d399;
+      color: #1e293b;
+      border: 2px solid #1e293b;
+    }
+
+    html[data-ui="playful"] .question::before,
+    html[data-ui="playful"] .question::after {
+      border-color: #1e293b;
+      background: #fbbf24;
+      border-radius: 24px;
+      opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
     @media (max-width: 860px) {
       .result-top { grid-template-columns: 1fr; }
     }
@@ -802,7 +1216,14 @@
   </style>
 </head>
 <body>
-  <div class="shell">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <div class="shell" id="main">
+    <div class="ui-switch" aria-label="界面风格切换">
+      <button type="button" data-ui-choice="cyber" aria-pressed="true">Cyber</button>
+      <button type="button" data-ui-choice="mono" aria-pressed="false">Mono</button>
+      <button type="button" data-ui-choice="swiss" aria-pressed="false">Swiss</button>
+      <button type="button" data-ui-choice="playful" aria-pressed="false">Play</button>
+    </div>
     <section id="intro" class="screen active">
       <div class="hero card hero-minimal">
         <h1>MBTI已经过时，SBTI来了。</h1>
@@ -1906,6 +2327,22 @@
       renderQuestions();
     }
 
+    function setUiMode(mode) {
+      const allowed = new Set(['cyber', 'mono', 'swiss', 'playful']);
+      const nextMode = allowed.has(mode) ? mode : 'cyber';
+      document.documentElement.dataset.ui = nextMode;
+      document.querySelectorAll('[data-ui-choice]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.uiChoice === nextMode));
+      });
+      try {
+        localStorage.setItem('sbti-ui', nextMode);
+      } catch {}
+    }
+
+    setUiMode(document.documentElement.dataset.ui || 'cyber');
+    document.querySelectorAll('[data-ui-choice]').forEach(button => {
+      button.addEventListener('click', () => setUiMode(button.dataset.uiChoice));
+    });
     document.getElementById('startBtn').addEventListener('click', () => startTest(false));
     document.getElementById('backIntroBtn').addEventListener('click', () => showScreen('intro'));
     document.getElementById('prevQuestionBtn').addEventListener('click', () => moveQuestion(-1));
