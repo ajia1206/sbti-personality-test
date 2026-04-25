@@ -2336,22 +2336,22 @@
     };
 
     const NEW_NORMAL_TYPES = [
-      { code: 'CTRL', pattern: 'HHMMMHMHMH', core: ['D1','D2','D6'] },
-      { code: 'RUSH', pattern: 'MHHHMMHMHH', core: ['D2','D3','D7'] },
-      { code: 'SAFE', pattern: 'HMLMMHLHLM', core: ['D1','D3','D6'] },
-      { code: 'FLOAT', pattern: 'LLMMLMLLML', core: ['D1','D2','D10'] },
-      { code: 'FIRE', pattern: 'MMHHHLHMMH', core: ['D4','D5','D7'] },
-      { code: 'ICE', pattern: 'HMLLLHLMLM', core: ['D4','D6','D9'] },
-      { code: 'GLUE', pattern: 'MMMHHLMMHH', core: ['D5','D6','D9'] },
-      { code: 'ISLAND', pattern: 'MMLLLHLLMM', core: ['D5','D6','D7'] },
-      { code: 'MASK', pattern: 'MMMMMMHHMM', core: ['D7','D8'] },
-      { code: 'RAW', pattern: 'MMHMMMMLMM', core: ['D3','D8'] },
-      { code: 'SUN', pattern: 'MHHHHLHMHH', core: ['D4','D5','D9'] },
-      { code: 'VOID', pattern: 'LLLLLHLMLL', core: ['D2','D9','D10'] },
-      { code: 'JUDGE', pattern: 'HMLMLHLHLH', core: ['D1','D8','D9'] },
-      { code: 'GAME', pattern: 'LMHHMLHLML', core: ['D1','D3','D7'] },
-      { code: 'DEVOTE', pattern: 'HHMHHMMMHH', core: ['D2','D5','D10'] },
-      { code: 'BUG', pattern: 'LMHHHHLHLL', core: ['D4','D6','D8'] }
+      { code: 'CTRL', pattern: 'HHMMMHMHMH', core: ['D1','D2','D6'], mustMin: { D1: 'M', D2: 'M' } },
+      { code: 'RUSH', pattern: 'MHHHMMHMHH', core: ['D2','D3','D7'], mustMin: { D2: 'H', D3: 'M' } },
+      { code: 'SAFE', pattern: 'HMLMMHLHLM', core: ['D1','D3','D6'], mustExact: { D3: 'L' } },
+      { code: 'FLOAT', pattern: 'LLMMLMLLML', core: ['D1','D2','D10'], mustExact: { D2: 'L', D10: 'L' } },
+      { code: 'FIRE', pattern: 'MMHHHLHMMH', core: ['D4','D5','D7'], mustMin: { D4: 'H' } },
+      { code: 'ICE', pattern: 'HMLLLHLMLM', core: ['D4','D6','D9'], mustExact: { D4: 'L' } },
+      { code: 'GLUE', pattern: 'MMMHHLMMHH', core: ['D5','D6','D9'], mustMin: { D5: 'H' } },
+      { code: 'ISLAND', pattern: 'MMLLLHLLMM', core: ['D5','D6','D7'], mustMin: { D6: 'H' }, mustExact: { D7: 'L' } },
+      { code: 'MASK', pattern: 'MMMMMMHHMM', core: ['D7','D8'], mustMin: { D7: 'H', D8: 'H' } },
+      { code: 'RAW', pattern: 'MMHMMMMLMM', core: ['D3','D8'], mustExact: { D8: 'L' } },
+      { code: 'SUN', pattern: 'MHHHHLHMHH', core: ['D4','D5','D9'], mustMin: { D4: 'H', D5: 'H', D9: 'H' } },
+      { code: 'VOID', pattern: 'LLLLLHLMLL', core: ['D2','D9','D10'], mustExact: { D2: 'L', D10: 'L' } },
+      { code: 'JUDGE', pattern: 'HMLMLHLHLH', core: ['D1','D8','D9'], mustMin: { D8: 'H' }, mustExact: { D9: 'L' } },
+      { code: 'GAME', pattern: 'LMHHMLHLML', core: ['D1','D3','D7'], mustMin: { D3: 'H' }, mustExact: { D1: 'L' } },
+      { code: 'DEVOTE', pattern: 'HHMHHMMMHH', core: ['D2','D5','D10'], mustMin: { D2: 'H', D5: 'H', D10: 'H' } },
+      { code: 'BUG', pattern: 'LMHHHHLHLL', core: ['D4','D6','D8'], mustMin: { D4: 'H', D6: 'H', D8: 'H' } }
     ];
 
     const NEW_DIM_EXPLANATIONS = {
@@ -2640,8 +2640,8 @@
     }
 
     function sumToNewLevel(score) {
-      if (score <= 33) return 'L';
-      if (score <= 66) return 'M';
+      if (score <= 5) return 'L';
+      if (score <= 9) return 'M';
       return 'H';
     }
 
@@ -2659,6 +2659,14 @@
       return Object.values(counts).some(count => count >= 24);
     }
 
+    function passesNewTypeGate(type, levels) {
+      const minEntries = Object.entries(type.mustMin || {});
+      const exactEntries = Object.entries(type.mustExact || {});
+      const minOk = minEntries.every(([dim, minLevel]) => levelNum(levels[dim]) >= levelNum(minLevel));
+      const exactOk = exactEntries.every(([dim, exactLevel]) => levels[dim] === exactLevel);
+      return minOk && exactOk;
+    }
+
     function computeNewResult() {
       const rawScores = {};
       const normalizedScores = {};
@@ -2671,11 +2679,11 @@
 
       NEW_DIMENSION_ORDER.forEach(dim => {
         normalizedScores[dim] = normalizedNewScore(rawScores[dim]);
-        levels[dim] = sumToNewLevel(normalizedScores[dim]);
+        levels[dim] = sumToNewLevel(rawScores[dim]);
       });
 
       const userVector = NEW_DIMENSION_ORDER.map(dim => levelNum(levels[dim]));
-      const ranked = NEW_NORMAL_TYPES.map(type => {
+      const scored = NEW_NORMAL_TYPES.map(type => {
         const vector = parsePattern(type.pattern).map(levelNum);
         let distance = 0;
         let exact = 0;
@@ -2687,8 +2695,11 @@
           if (diff === 0) exact += 1;
         }
         const similarity = Math.max(0, Math.round((1 - distance / 23) * 100));
-        return { ...type, ...NEW_TYPE_LIBRARY[type.code], distance, exact, similarity };
-      }).sort((a, b) => {
+        const gatePassed = passesNewTypeGate(type, levels);
+        return { ...type, ...NEW_TYPE_LIBRARY[type.code], distance, exact, similarity, gatePassed };
+      });
+      const eligible = scored.filter(type => type.gatePassed);
+      const ranked = (eligible.length ? eligible : scored).sort((a, b) => {
         if (a.distance !== b.distance) return a.distance - b.distance;
         if (b.exact !== a.exact) return b.exact - a.exact;
         return b.similarity - a.similarity;
@@ -2708,7 +2719,7 @@
         badge = '答题模式异常 · 抽象玩家判定';
         sub = '系统检测到高度重复的答题轨迹，已切换为反测评结果。';
         special = true;
-      } else if (bestNormal.similarity < 62 || topGap < 1) {
+      } else if ((bestNormal.similarity < 68 && topGap < 1.5) || (bestNormal.similarity < 75 && bestNormal.exact <= 5)) {
         finalType = NEW_TYPE_LIBRARY.MIX;
         modeKicker = '系统强制兜底';
         badge = `最高匹配 ${bestNormal.similarity}% · 前排结果过于接近`;

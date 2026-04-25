@@ -54,8 +54,9 @@ score = Math.round(((raw - 3) / 9) * 100)
 维度等级：
 
 ```javascript
-if (score <= 33) return 'L'
-if (score <= 66) return 'M'
+// raw 为每个维度 3 题原始分，范围 3-12
+if (raw <= 5) return 'L'
+if (raw <= 9) return 'M'
 return 'H'
 ```
 
@@ -72,7 +73,8 @@ similarity = Math.round(100 - distance / maxDistance * 100)
 
 - `target`: 10 维目标分
 - `weights`: 10 维权重，核心维度为 `1.5`，普通维度为 `1`
-- `must`: 可选硬条件，例如控制感必须高于 70，否则不能成为 `总控台`
+- `mustMin` / `mustExact`: 核心门槛，例如 `CTRL` 至少需要中高控制感和推进力，`ISLAND` 必须高边界且低社交启动。
+- `MIX` 兜底只在“最高匹配偏低且前排距离接近”，或“最高匹配低于 75 且精准命中不超过 5/10”时触发，避免明确画像被过早打成混合型，也避免中庸画像被硬塞进某个具体人格。
 
 ---
 
