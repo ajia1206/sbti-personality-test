@@ -7,9 +7,9 @@
   <link rel="icon" href="data:," />
   <script>
     try {
-      document.documentElement.dataset.ui = localStorage.getItem('sbti-ui') || 'cyber';
+      document.documentElement.dataset.ui = localStorage.getItem('sbti-ui') || 'playful';
     } catch {
-      document.documentElement.dataset.ui = 'cyber';
+      document.documentElement.dataset.ui = 'playful';
     }
   </script>
   <style>
@@ -75,11 +75,28 @@
       padding: 24px 16px 56px;
     }
 
+    .theme-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin: 14px 0 18px;
+      flex-wrap: wrap;
+    }
+
+    .theme-hint {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
     .ui-switch {
       display: flex;
       justify-content: flex-end;
       gap: 0;
-      margin: 14px 0 18px;
+      margin: 0;
     }
 
     .ui-switch button {
@@ -1390,6 +1407,7 @@
     }
 
     html[data-ui="playful"] .project-origin,
+    html[data-ui="playful"] .theme-hint,
     html[data-ui="playful"] .poster-caption,
     html[data-ui="playful"] .type-subname,
     html[data-ui="playful"] .analysis-box p,
@@ -1433,11 +1451,14 @@
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
   <div class="shell" id="main">
-    <div class="ui-switch" aria-label="界面风格切换">
-      <button type="button" data-ui-choice="cyber" aria-pressed="true">Cyber</button>
-      <button type="button" data-ui-choice="mono" aria-pressed="false">Mono</button>
-      <button type="button" data-ui-choice="swiss" aria-pressed="false">Swiss</button>
-      <button type="button" data-ui-choice="playful" aria-pressed="false">Play</button>
+    <div class="theme-bar">
+      <div class="theme-hint">可切换主题</div>
+      <div class="ui-switch" aria-label="界面风格切换">
+        <button type="button" data-ui-choice="cyber" aria-pressed="false">Cyber</button>
+        <button type="button" data-ui-choice="mono" aria-pressed="false">Mono</button>
+        <button type="button" data-ui-choice="swiss" aria-pressed="false">Swiss</button>
+        <button type="button" data-ui-choice="playful" aria-pressed="true">Play</button>
+      </div>
     </div>
     <section id="intro" class="screen active">
       <div class="hero card hero-minimal">
@@ -2976,7 +2997,7 @@
 
     function setUiMode(mode) {
       const allowed = new Set(['cyber', 'mono', 'swiss', 'playful']);
-      const nextMode = allowed.has(mode) ? mode : 'cyber';
+      const nextMode = allowed.has(mode) ? mode : 'playful';
       document.documentElement.dataset.ui = nextMode;
       document.querySelectorAll('[data-ui-choice]').forEach(button => {
         button.setAttribute('aria-pressed', String(button.dataset.uiChoice === nextMode));
@@ -2986,7 +3007,7 @@
       } catch {}
     }
 
-    setUiMode(document.documentElement.dataset.ui || 'cyber');
+    setUiMode(document.documentElement.dataset.ui || 'playful');
     document.querySelectorAll('[data-ui-choice]').forEach(button => {
       button.addEventListener('click', () => setUiMode(button.dataset.uiChoice));
     });
