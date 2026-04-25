@@ -208,6 +208,19 @@
       max-width: 720px;
     }
 
+    .project-origin {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+      max-width: 720px;
+    }
+
+    .project-origin strong {
+      color: var(--text);
+      font-weight: 800;
+    }
+
     .hero-grid {
       display: grid;
       grid-template-columns: 1.3fr 0.9fr;
@@ -1227,6 +1240,10 @@
     <section id="intro" class="screen active">
       <div class="hero card hero-minimal">
         <h1>MBTI已经过时，SBTI来了。</h1>
+        <p class="project-origin">
+          <strong>这是我基于开源项目二次改造的 SBTI 人格测试。</strong>
+          在保留原始题库和娱乐精神的基础上，我重做了测试流程、结果页、移动端体验，并加入多套 UI 风格切换。
+        </p>
         <div class="hero-actions hero-actions-single">
           <button id="startBtn" class="btn-primary">开始测试</button>
         </div>
@@ -1242,26 +1259,21 @@
           </div>
         </div>
         <details>
-          <summary style="margin-top: 1rem; font-size: 0.75rem; color: gray; cursor: pointer;">关于本镜像</summary>
+          <summary style="margin-top: 1rem; font-size: 0.75rem; color: gray; cursor: pointer;">关于本项目</summary>
           <div style="color: gray; padding-top: 0.5rem; font-size: 0.75rem;">
             <div style="margin: 0.5rem;">
-              原作者认可评论区的镜像地址，其实是一件蛮高风险的事情（别人完全可能会添加引流内容或恶意代码），但原作者愿意信任我，我也应当回报这份信任，以下为网站声明：
+              本项目是我基于开源项目进行的二次改造版本，主要改造集中在前端交互、视觉风格、结果页展示和部署体验。
             </div>
             <div style="margin: 0.5rem;">
-              本镜像(sbti.unun.dev)除该页面声明和图片拆分以优化加载外，<br>未作任何其它修改，地址直到过期都不会挪作他用，可以放心使用。
+              测试内容保留原 SBTI 的娱乐表达，新增的界面切换、答题流程和页面结构属于本项目改造内容。
             </div>
             <div>
-              原作者并未开源，但仅因网页自身即为全部源码，出于存档目的，你可以在
+              开源项目来源可在
               <a href="https://github.com/UnluckyNinja/SBTI-test" rel="noopener" target="_blank">
                 此处
               </a>
-              查看。
+              查看。本页面仅供课程实战、前端复刻和娱乐体验使用。
             </div>
-          </div>
-          <div style="margin: 1rem; font-size:0.5rem; color: #80808080">
-            网站从4月10日中午开始，境内逐渐无法访问。
-            网站自身一切正常，不是流量问题，纯前端网站没有后端，而Cloudflare也是经历过大风大浪的。
-            本站不企图去避开绕过，这只会将情况变得更糟。相信大家都能八仙过海各显神通。
           </div>
         </details>
       </div>
