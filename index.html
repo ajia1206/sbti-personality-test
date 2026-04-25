@@ -4,18 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SBTI 人格测试</title>
+  <link rel="icon" href="data:," />
   <style>
     :root {
-      --bg: #f6faf6;
-      --panel: #ffffff;
-      --text: #1e2a22;
-      --muted: #6a786f;
-      --line: #dbe8dd;
-      --soft: #edf6ef;
-      --accent: #6c8d71;
-      --accent-strong: #4d6a53;
-      --shadow: 0 16px 40px rgba(47, 73, 55, 0.08);
-      --radius: 22px;
+      --bg: #080a12;
+      --panel: rgba(15, 19, 33, 0.92);
+      --panel-strong: #111827;
+      --text: #f7fbff;
+      --muted: #9aa7bd;
+      --line: rgba(93, 245, 255, 0.22);
+      --soft: rgba(0, 255, 209, 0.09);
+      --accent: #00ffd1;
+      --accent-strong: #ff3df2;
+      --accent-warm: #ffd166;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+      --radius: 8px;
     }
 
     * { box-sizing: border-box; }
@@ -23,7 +26,12 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       background:
-        radial-gradient(circle at top left, #f8fff8 0, #f6faf6 36%, #f2f7f3 100%);
+        linear-gradient(rgba(0, 255, 209, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 209, 0.045) 1px, transparent 1px),
+        radial-gradient(circle at 15% 0%, rgba(255, 61, 242, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 12%, rgba(0, 255, 209, 0.16), transparent 28%),
+        linear-gradient(135deg, #080a12 0%, #10131f 48%, #070811 100%);
+      background-size: 38px 38px, 38px 38px, auto, auto, auto;
       color: var(--text);
       min-height: 100vh;
     }
@@ -39,6 +47,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
     }
 
     .hero {
@@ -152,19 +161,19 @@
     button:disabled { cursor: not-allowed; opacity: 0.55; transform: none; }
 
     .btn-primary {
-      background: var(--accent-strong);
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: #fff;
       padding: 14px 20px;
-      border-radius: 14px;
-      box-shadow: 0 12px 30px rgba(77, 106, 83, 0.18);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(255, 61, 242, 0.22);
       font-weight: 700;
     }
 
     .btn-secondary {
-      background: #fff;
-      color: var(--accent-strong);
+      background: rgba(255,255,255,0.06);
+      color: var(--accent);
       padding: 14px 20px;
-      border-radius: 14px;
+      border-radius: 8px;
       border: 1px solid var(--line);
       font-weight: 700;
     }
@@ -191,7 +200,7 @@
       flex: 1;
       min-width: 240px;
       height: 10px;
-      background: #edf3ee;
+      background: rgba(255,255,255,0.08);
       border-radius: 999px;
       overflow: hidden;
       position: relative;
@@ -201,7 +210,7 @@
       display: block;
       width: 0;
       height: 100%;
-      background: linear-gradient(90deg, #97b59c, #5b7a62);
+      background: linear-gradient(90deg, var(--accent), var(--accent-strong));
       border-radius: inherit;
       transition: width .22s ease;
     }
@@ -214,14 +223,50 @@
 
     .question-list {
       display: grid;
-      gap: 16px;
+      place-items: center;
+      min-height: 430px;
+      perspective: 1200px;
+      position: relative;
     }
 
     .question {
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      background: linear-gradient(180deg, #ffffff, #fbfdfb);
+      border-radius: 10px;
+      padding: 22px;
+      width: min(100%, 760px);
+      min-height: 360px;
+      background:
+        linear-gradient(135deg, rgba(0,255,209,0.12), transparent 36%),
+        linear-gradient(180deg, rgba(18,24,42,0.96), rgba(10,13,24,0.98));
+      box-shadow:
+        0 24px 60px rgba(0,0,0,0.42),
+        inset 0 0 0 1px rgba(255,255,255,0.04);
+      position: relative;
+      transform-style: preserve-3d;
+      animation: cardIn .22s ease-out;
+    }
+
+    .question::before,
+    .question::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(0,255,209,0.16);
+      border-radius: 10px;
+      background: rgba(15,19,33,0.56);
+      transform: translate3d(0, 18px, -35px) rotate(-1.5deg);
+      z-index: -1;
+    }
+
+    .question::after {
+      inset: 28px;
+      transform: translate3d(0, 34px, -70px) rotate(2deg);
+      opacity: 0.62;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px) rotateX(4deg); }
+      to { opacity: 1; transform: translateY(0) rotateX(0); }
     }
 
     .question-meta {
@@ -263,13 +308,19 @@
       padding: 14px 14px;
       border-radius: 14px;
       border: 1px solid var(--line);
-      background: #fff;
+      background: rgba(255,255,255,0.04);
       transition: border-color .16s ease, background .16s ease, transform .16s ease;
     }
 
     .option:hover {
-      border-color: #bcd0c1;
-      background: #f8fcf9;
+      border-color: var(--accent);
+      background: rgba(0,255,209,0.08);
+    }
+
+    .option:has(input:checked) {
+      border-color: var(--accent-strong);
+      background: rgba(255,61,242,0.12);
+      box-shadow: inset 3px 0 0 var(--accent-strong);
     }
 
     .option input {
@@ -281,7 +332,7 @@
 
     .option-code {
       font-weight: 800;
-      color: var(--accent-strong);
+      color: var(--accent);
       min-width: 22px;
     }
 
@@ -661,6 +712,73 @@
       flex-wrap: wrap;
       margin-top: 22px;
     }
+
+    .hero,
+    .test-wrap,
+    .result-wrap {
+      border-color: rgba(0,255,209,0.26);
+      background:
+        linear-gradient(135deg, rgba(255,61,242,0.08), transparent 34%),
+        linear-gradient(180deg, rgba(14,18,32,0.96), rgba(8,10,18,0.96));
+    }
+
+    .hero-minimal {
+      min-height: 60vh;
+    }
+
+    .hero-minimal h1 {
+      color: var(--text);
+      text-shadow: 0 0 28px rgba(0,255,209,0.22);
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    .mini-panel,
+    .question,
+    .type-box,
+    .score-box,
+    .dim-box,
+    .top3-box,
+    .about-box,
+    .poster-box,
+    .analysis-box,
+    .note-box,
+    .author-box,
+    .dim-item,
+    .score-item,
+    .dim-pill,
+    .top3-item {
+      background:
+        linear-gradient(135deg, rgba(0,255,209,0.08), transparent 42%),
+        rgba(255,255,255,0.045);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .poster-image {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .analysis-box p,
+    .author-content p,
+    .type-desc {
+      color: #dce7f7;
+    }
+
+    .match,
+    .badge {
+      color: var(--accent);
+    }
+
+    .nav-cluster {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
     @media (max-width: 860px) {
       .result-top { grid-template-columns: 1fr; }
     }
@@ -739,8 +857,10 @@
 
         <div class="actions-bottom">
           <div class="hint" id="testHint">全选完才会放行。世界已经够乱了，起码把题做完整。</div>
-          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div class="nav-cluster">
             <button id="backIntroBtn" class="btn-secondary">返回首页</button>
+            <button id="prevQuestionBtn" class="btn-secondary">上一题</button>
+            <button id="nextQuestionBtn" class="btn-primary">下一题</button>
             <button id="submitBtn" class="btn-primary" disabled>提交并查看结果</button>
           </div>
         </div>
@@ -1283,33 +1403,33 @@
   }
 };
     const TYPE_IMAGES = {
-  "IMSB": "./image/IMSB.png",
-  "BOSS": "./image/BOSS.png",
-  "MUM": "./image/MUM.png",
-  "FAKE": "./image/FAKE.png",
-  "Dior-s": "./image/Dior-s.jpg",
-  "DEAD": "./image/DEAD.png",
-  "ZZZZ": "./image/ZZZZ.png",
-  "GOGO": "./image/GOGO.png",
-  "FUCK": "./image/FUCK.png",
-  "CTRL": "./image/CTRL.png",
-  "HHHH": "./image/HHHH.png",
-  "SEXY": "./image/SEXY.png",
-  "OJBK": "./image/OJBK.png",
-  "JOKE-R": "./image/JOKE-R.jpg",
-  "POOR": "./image/POOR.png",
-  "OH-NO": "./image/OH-NO.png",
-  "MONK": "./image/MONK.png",
-  "SHIT": "./image/SHIT.png",
-  "THAN-K": "./image/THAN-K.png",
-  "MALO": "./image/MALO.png",
-  "ATM-er": "./image/ATM-er.png",
-  "THIN-K": "./image/THIN-K.png",
-  "SOLO": "./image/SOLO.png",
-  "LOVE-R": "./image/LOVE-R.png",
-  "WOC!": "./image/WOC.png",
-  "DRUNK": "./image/DRUNK.png",
-  "IMFW": "./image/IMFW.png"
+  "IMSB": "./images/IMSB.png",
+  "BOSS": "./images/BOSS.png",
+  "MUM": "./images/MUM.png",
+  "FAKE": "./images/FAKE.png",
+  "Dior-s": "./images/Dior-s.jpg",
+  "DEAD": "./images/DEAD.png",
+  "ZZZZ": "./images/ZZZZ.png",
+  "GOGO": "./images/GOGO.png",
+  "FUCK": "./images/FUCK.png",
+  "CTRL": "./images/CTRL.png",
+  "HHHH": "./images/HHHH.png",
+  "SEXY": "./images/SEXY.png",
+  "OJBK": "./images/OJBK.png",
+  "JOKE-R": "./images/JOKE-R.jpg",
+  "POOR": "./images/POOR.png",
+  "OH-NO": "./images/OH-NO.png",
+  "MONK": "./images/MONK.png",
+  "SHIT": "./images/SHIT.png",
+  "THAN-K": "./images/THAN-K.png",
+  "MALO": "./images/MALO.png",
+  "ATM-er": "./images/ATM-er.png",
+  "THIN-K": "./images/THIN-K.png",
+  "SOLO": "./images/SOLO.png",
+  "LOVE-R": "./images/LOVE-R.png",
+  "WOC!": "./images/WOC.png",
+  "DRUNK": "./images/DRUNK.png",
+  "IMFW": "./images/IMFW.png"
 };
 
     const NORMAL_TYPES = [
@@ -1498,6 +1618,7 @@
     const app = {
       shuffledQuestions: [],
       answers: {},
+      currentIndex: 0,
       previewMode: false
     };
 
@@ -1511,6 +1632,8 @@
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
     const submitBtn = document.getElementById('submitBtn');
+    const prevQuestionBtn = document.getElementById('prevQuestionBtn');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
     const testHint = document.getElementById('testHint');
 
     function showScreen(name) {
@@ -1545,32 +1668,36 @@
 
     function renderQuestions() {
       const visibleQuestions = getVisibleQuestions();
+      if (app.currentIndex >= visibleQuestions.length) {
+        app.currentIndex = Math.max(visibleQuestions.length - 1, 0);
+      }
+      if (app.currentIndex < 0) app.currentIndex = 0;
+      const q = visibleQuestions[app.currentIndex];
       questionList.innerHTML = '';
-      visibleQuestions.forEach((q, index) => {
-        const card = document.createElement('article');
-        card.className = 'question';
-        card.innerHTML = `
-          <div class="question-meta">
-            <div class="badge">第 ${index + 1} 题</div>
-            <div>${getQuestionMetaLabel(q)}</div>
-          </div>
-          <div class="question-title">${q.text}</div>
-          <div class="options">
-            ${q.options.map((opt, i) => {
-              const code = ['A', 'B', 'C', 'D'][i] || String(i + 1);
-              const checked = app.answers[q.id] === opt.value ? 'checked' : '';
-              return `
-                <label class="option">
-                  <input type="radio" name="${q.id}" value="${opt.value}" ${checked} />
-                  <div class="option-code">${code}</div>
-                  <div>${opt.label}</div>
-                </label>
-              `;
-            }).join('')}
-          </div>
-        `;
-        questionList.appendChild(card);
-      });
+      if (!q) return;
+      const card = document.createElement('article');
+      card.className = 'question';
+      card.innerHTML = `
+        <div class="question-meta">
+          <div class="badge">第 ${app.currentIndex + 1} 题</div>
+          <div>${getQuestionMetaLabel(q)}</div>
+        </div>
+        <div class="question-title">${q.text}</div>
+        <div class="options">
+          ${q.options.map((opt, i) => {
+            const code = ['A', 'B', 'C', 'D'][i] || String(i + 1);
+            const checked = app.answers[q.id] === opt.value ? 'checked' : '';
+            return `
+              <label class="option">
+                <input type="radio" name="${q.id}" value="${opt.value}" ${checked} />
+                <div class="option-code">${code}</div>
+                <div>${opt.label}</div>
+              </label>
+            `;
+          }).join('')}
+        </div>
+      `;
+      questionList.appendChild(card);
 
       questionList.querySelectorAll('input[type="radio"]').forEach(input => {
         input.addEventListener('change', (e) => {
@@ -1597,13 +1724,22 @@
       const total = visibleQuestions.length;
       const done = visibleQuestions.filter(q => app.answers[q.id] !== undefined).length;
       const percent = total ? (done / total) * 100 : 0;
+      const current = Math.min(app.currentIndex + 1, total);
+      const currentQuestion = visibleQuestions[app.currentIndex];
+      const currentAnswered = currentQuestion && app.answers[currentQuestion.id] !== undefined;
       progressBar.style.width = `${percent}%`;
-      progressText.textContent = `${done} / ${total}`;
+      progressText.textContent = `第 ${current} / ${total} 题 · 已答 ${done}`;
       const complete = done === total && total > 0;
+      prevQuestionBtn.disabled = app.currentIndex === 0;
+      nextQuestionBtn.disabled = !currentAnswered || app.currentIndex >= total - 1;
+      nextQuestionBtn.style.display = app.currentIndex >= total - 1 ? 'none' : '';
+      submitBtn.style.display = app.currentIndex >= total - 1 ? '' : 'none';
       submitBtn.disabled = !complete;
       testHint.textContent = complete
         ? '都做完了。现在可以把你的电子魂魄交给结果页审判。'
-        : '全选完才会放行。世界已经够乱了，起码把题做完整。';
+        : currentAnswered
+          ? '当前题已锁定。继续翻下一张卡片。'
+          : '先选一个答案，下一张卡片才会解锁。';
     }
 
     function sumToLevel(score) {
@@ -1747,6 +1883,7 @@
     function startTest(preview = false) {
       app.previewMode = preview;
       app.answers = {};
+      app.currentIndex = 0;
       const shuffledRegular = shuffle(questions);
       const insertIndex = Math.floor(Math.random() * shuffledRegular.length) + 1;
       app.shuffledQuestions = [
@@ -1758,12 +1895,25 @@
       showScreen('test');
     }
 
+    function moveQuestion(delta) {
+      const visibleQuestions = getVisibleQuestions();
+      const nextIndex = Math.min(
+        Math.max(app.currentIndex + delta, 0),
+        Math.max(visibleQuestions.length - 1, 0)
+      );
+      if (nextIndex === app.currentIndex) return;
+      app.currentIndex = nextIndex;
+      renderQuestions();
+    }
+
     document.getElementById('startBtn').addEventListener('click', () => startTest(false));
     document.getElementById('backIntroBtn').addEventListener('click', () => showScreen('intro'));
+    document.getElementById('prevQuestionBtn').addEventListener('click', () => moveQuestion(-1));
+    document.getElementById('nextQuestionBtn').addEventListener('click', () => moveQuestion(1));
     document.getElementById('submitBtn').addEventListener('click', renderResult);
     document.getElementById('restartBtn').addEventListener('click', () => startTest(false));
     document.getElementById('toTopBtn').addEventListener('click', () => showScreen('intro'));
   </script>
 
-<!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d44d4fe6b56c4b46892c3f789d8ac0c5"}'></script><!-- Cloudflare Pages Analytics --></body>
+</body>
 </html>
