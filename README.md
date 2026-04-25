@@ -17,6 +17,7 @@ GitHub 仓库：
 - 首页支持 `原题版` / `新题版` 切换；原题版保留原 SBTI 逻辑，新题版使用 30 题 10 维新版系统。
 - 原题版展示 15 个维度评分；新题版展示 10 个新版维度评分。
 - 25 种常规人格 + HHHH 兜底人格 + DRUNK 隐藏人格。
+- 新题版内置 16 种常规人格 + MIX 兜底人格 + META 隐藏人格，并配置独立结果配图。
 - 深色赛博朋克视觉风格。
 - 内置 UI 风格切换：Cyberpunk、Minimalist Monochrome、Swiss International、Playful Geometric。
 - 单题卡片堆叠式答题流程。
@@ -47,6 +48,8 @@ http://127.0.0.1:4173/
 ├── images/
 │   ├── CTRL.png
 │   ├── DEAD.png
+│   ├── NEW-CTRL.png
+│   ├── NEW-META.png
 │   └── ...
 ├── 01_questions.md
 ├── 02_results.md
