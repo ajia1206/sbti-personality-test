@@ -1259,6 +1259,16 @@
       color: #ff3000;
     }
 
+    html[data-ui="swiss"] .project-origin,
+    html[data-ui="swiss"] .poster-caption,
+    html[data-ui="swiss"] .type-subname,
+    html[data-ui="swiss"] .analysis-box p,
+    html[data-ui="swiss"] .author-content p,
+    html[data-ui="swiss"] .dim-item p,
+    html[data-ui="swiss"] .note-box p {
+      color: #525252;
+    }
+
     html[data-ui="swiss"] .ui-switch button {
       font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Helvetica, Arial, sans-serif;
       font-size: 12px;
@@ -1379,6 +1389,16 @@
       opacity: 1;
     }
 
+    html[data-ui="playful"] .project-origin,
+    html[data-ui="playful"] .poster-caption,
+    html[data-ui="playful"] .type-subname,
+    html[data-ui="playful"] .analysis-box p,
+    html[data-ui="playful"] .author-content p,
+    html[data-ui="playful"] .dim-item p,
+    html[data-ui="playful"] .note-box p {
+      color: #475569;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1427,13 +1447,13 @@
           在保留原始题库和娱乐精神的基础上，我重做了测试流程、结果页、移动端体验，并加入多套 UI 风格切换。
         </p>
         <div class="assessment-switch" aria-label="选择题库">
-          <button id="startBtn" class="assessment-option btn-secondary" type="button">
-            <strong>原题版</strong>
-            <span>保留原 SBTI 题库、隐藏酒鬼人格、27 种结果和原有匹配逻辑。</span>
-          </button>
           <button id="startNewBtn" class="assessment-option btn-primary" type="button">
             <strong>新题版</strong>
             <span>30 题新版人格系统，10 个维度，结果使用当下网络语感重新设计。</span>
+          </button>
+          <button id="startBtn" class="assessment-option btn-secondary" type="button">
+            <strong>原题版</strong>
+            <span>保留原 SBTI 题库、隐藏酒鬼人格、27 种结果和原有匹配逻辑。</span>
           </button>
         </div>
         <div style="margin-top: 2rem; display: flex; flex-direction: column;">
@@ -1513,7 +1533,7 @@
           </div>
 
           <div class="dim-box">
-            <h3>十五维度评分</h3>
+            <h3 id="dimBoxTitle">十五维度评分</h3>
             <div id="dimList" class="dim-list"></div>
           </div>
 
@@ -1522,13 +1542,13 @@
             <p id="funNote">本测试仅供娱乐，别拿它当诊断、面试、相亲、分手、招魂、算命或人生判决书。</p>
           </div>
 
-                    <details class="author-box">
+          <details class="author-box">
             <summary>作者的话</summary>
-            <div class="author-content">
-              <p>本测试首发于b站up主蛆肉儿串儿（UID417038183），初衷是劝诫一位爱喝酒的朋友戒酒。</p>
-              <p>由于作者的人格是SHIT愤世者，所以平等的攻击了各位，在此抱歉！！不过我是一个绝世大美女，你们一定会原谅我，有B站的朋友们也可以关注我。</p>
-              <p>关于这个测试，我没法很好的平衡娱乐和专业性，因此对于一些人格的阐释较为模糊或完全不准（如屌丝可能并非真的屌丝），如有冒犯非常抱歉！！</p>
-              <p>再鉴于时间精力有限，就随便搞了一个先这样玩玩，后续会慢慢完善修改的，总之好玩为主，还请不要用于盈利呀。</p>
+            <div class="author-content" id="authorContent">
+              <p>本测试首发于 B 站 UP 主 Q肉儿串儿（UID 417038183），初衷是劝诫一位爱喝酒的朋友戒酒。</p>
+              <p>由于原作者的人格是 SHIT 愤世者，所以平等地攻击了各位，在此保留原作的娱乐精神和冒犯式幽默。</p>
+              <p>关于这个测试，原作者也说明过它很难平衡娱乐和专业性，因此一些人格阐释可能模糊或完全不准，如有冒犯请当成段子。</p>
+              <p>本项目保留原题版作为原作复刻入口，不改变原题库、原结果库和原匹配逻辑。</p>
             </div>
           </details>
         </div>
@@ -2424,7 +2444,7 @@
       answers: {},
       currentIndex: 0,
       previewMode: false,
-      assessmentMode: 'classic',
+      assessmentMode: 'new30',
       answerLog: []
     };
 
@@ -2821,6 +2841,25 @@
       }).join('');
     }
 
+    function renderAuthorNote() {
+      const authorContent = document.getElementById('authorContent');
+      if (app.assessmentMode === 'new30') {
+        authorContent.innerHTML = `
+          <p>新题版是我基于开源项目二次改造的新版人格系统，题目、10 个行为维度、新人格命名和结果文案都做了重新设计。</p>
+          <p>原版 SBTI 的题库、隐藏酒鬼人格、结果图和匹配逻辑仍保留在“原题版”里；新题版不是替代原作者版本，而是一个独立的二创分支。</p>
+          <p>新版更偏网络语感和截图传播，目标是好玩、好懂、有梗，不是心理测量、职业评估或严肃诊断。</p>
+          <p>如果结果戳中了你，可以笑一下；如果没戳中，也很正常，说明你暂时没有被这套抽象标签完全拿捏。</p>
+        `;
+        return;
+      }
+      authorContent.innerHTML = `
+        <p>本测试首发于 B 站 UP 主 Q肉儿串儿（UID 417038183），初衷是劝诫一位爱喝酒的朋友戒酒。</p>
+        <p>由于原作者的人格是 SHIT 愤世者，所以平等地攻击了各位，在此保留原作的娱乐精神和冒犯式幽默。</p>
+        <p>关于这个测试，原作者也说明过它很难平衡娱乐和专业性，因此一些人格阐释可能模糊或完全不准，如有冒犯请当成段子。</p>
+        <p>本项目保留原题版作为原作复刻入口，不改变原题库、原结果库和原匹配逻辑。</p>
+      `;
+    }
+
     function renderResult() {
       const result = computeResult();
       const type = result.finalType;
@@ -2831,6 +2870,9 @@
       document.getElementById('resultTypeSub').textContent = result.sub;
       document.getElementById('resultDesc').textContent = type.desc;
       document.getElementById('posterCaption').textContent = type.intro;
+      document.getElementById('dimBoxTitle').textContent = app.assessmentMode === 'new30'
+        ? '十维度评分'
+        : '十五维度评分';
       document.getElementById('funNote').textContent = result.special
         ? (app.assessmentMode === 'new30'
           ? '新题版结果仅供娱乐。兜底或隐藏人格说明你的答题轨迹比较抽象，不代表真实心理结论。'
@@ -2853,6 +2895,7 @@
       }
 
       renderDimList(result);
+      renderAuthorNote();
       showScreen('result');
     }
 
