@@ -14,7 +14,8 @@ GitHub 仓库：
 
 - 纯前端静态页面，无后端服务。
 - 30 道常规题 + 2 道酒鬼触发题。
-- 15 个维度评分，按 L / M / H 分级。
+- 首页支持 `原题版` / `新题版` 切换；原题版保留原 SBTI 逻辑，新题版使用 30 题 10 维新版系统。
+- 原题版展示 15 个维度评分；新题版展示 10 个新版维度评分。
 - 25 种常规人格 + HHHH 兜底人格 + DRUNK 隐藏人格。
 - 深色赛博朋克视觉风格。
 - 内置 UI 风格切换：Cyberpunk、Minimalist Monochrome、Swiss International、Playful Geometric。
