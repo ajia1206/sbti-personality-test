@@ -26,13 +26,16 @@
       --accent-warm: #ffd166;
       --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
       --radius: 8px;
+      --font-cn-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "Segoe UI", sans-serif;
+      --font-cn-serif: "Source Serif 4", Georgia, "Songti SC", "STSong", "SimSun", serif;
+      --font-latin-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
     }
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-cn-sans);
       background:
         linear-gradient(rgba(0, 255, 209, 0.045) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 255, 209, 0.045) 1px, transparent 1px),
@@ -42,6 +45,8 @@
       background-size: 38px 38px, 38px 38px, auto, auto, auto;
       color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     .skip-link {
@@ -84,7 +89,7 @@
       background: rgba(255,255,255,0.05);
       color: var(--muted);
       padding: 10px 14px;
-      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      font-family: var(--font-latin-mono);
       font-size: 12px;
       font-weight: 800;
       line-height: 1;
@@ -294,12 +299,14 @@
       border: 1px solid var(--line);
       background: rgba(255,255,255,0.05);
       color: var(--text);
+      letter-spacing: 0;
     }
 
     .assessment-option strong {
       display: block;
       margin-bottom: 8px;
       font-size: 16px;
+      color: currentColor;
     }
 
     .assessment-option span {
@@ -307,6 +314,22 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.7;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    .assessment-option.btn-primary {
+      color: #ffffff;
+    }
+
+    .assessment-option.btn-primary strong,
+    .assessment-option.btn-primary span {
+      color: #ffffff;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.22);
+    }
+
+    .assessment-option.btn-primary span {
+      opacity: 0.94;
     }
 
     button {
@@ -989,7 +1012,7 @@
     }
 
     html[data-ui="mono"] body {
-      font-family: "Source Serif 4", Georgia, "Songti SC", "STSong", "SimSun", serif;
+      font-family: var(--font-cn-serif);
       background:
         repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.015) 1px, rgba(0,0,0,0.015) 2px),
         #ffffff;
@@ -1045,10 +1068,10 @@
 
     html[data-ui="mono"] .hero-minimal h1 {
       max-width: 900px;
-      font-family: "Playfair Display", Georgia, serif;
-      font-size: 96px;
-      line-height: 0.92;
-      letter-spacing: -0.04em;
+      font-family: "Songti SC", "STSong", "SimSun", "Playfair Display", Georgia, serif;
+      font-size: clamp(42px, 7vw, 62px);
+      line-height: 1.08;
+      letter-spacing: 0;
       text-shadow: none;
       text-transform: none;
     }
@@ -1113,11 +1136,11 @@
     html[data-ui="mono"] .ui-switch button,
     html[data-ui="mono"] .type-kicker,
     html[data-ui="mono"] .dim-item-score {
-      font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      font-family: var(--font-latin-mono);
     }
 
     html[data-ui="swiss"] body {
-      font-family: Inter, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Helvetica, Arial, sans-serif;
       background:
         linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px),
@@ -1169,13 +1192,21 @@
     html[data-ui="swiss"] .hero-minimal h1,
     html[data-ui="swiss"] .type-name {
       max-width: 920px;
-      font-family: Inter, Helvetica, Arial, sans-serif;
-      font-size: 104px;
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Helvetica, Arial, sans-serif;
       font-weight: 900;
-      line-height: 0.88;
-      letter-spacing: -0.06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       text-shadow: none;
+    }
+
+    html[data-ui="swiss"] .hero-minimal h1 {
+      font-size: clamp(42px, 7vw, 64px);
+      line-height: 1.02;
+    }
+
+    html[data-ui="swiss"] .type-name {
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.08;
     }
 
     html[data-ui="swiss"] .btn-primary,
@@ -1229,14 +1260,14 @@
     }
 
     html[data-ui="swiss"] .ui-switch button {
-      font-family: Inter, Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: Inter, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Helvetica, Arial, sans-serif;
       font-size: 12px;
       line-height: 1;
       letter-spacing: 0.08em;
     }
 
     html[data-ui="playful"] body {
-      font-family: "Plus Jakarta Sans", "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Plus Jakarta Sans", "Outfit", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at 12px 12px, rgba(139,92,246,0.16) 2px, transparent 3px),
         radial-gradient(circle at 85% 10%, rgba(251,191,36,0.35), transparent 20%),
@@ -1276,7 +1307,7 @@
     }
 
     html[data-ui="playful"] .hero-minimal h1 {
-      font-family: Outfit, "Plus Jakarta Sans", system-ui, sans-serif;
+      font-family: Outfit, "Plus Jakarta Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
       color: #1e293b;
       text-shadow: none;
       font-weight: 800;
@@ -1302,7 +1333,7 @@
     }
 
     html[data-ui="playful"] .ui-switch button {
-      font-family: "Plus Jakarta Sans", "Outfit", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Plus Jakarta Sans", "Outfit", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 12px;
       line-height: 1;
       letter-spacing: 0.06em;
